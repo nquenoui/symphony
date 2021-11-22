@@ -8,12 +8,12 @@ use App\Entity\Article;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
-class ArticleFixtures extends Fixture
+class CategorieFixtures extends Fixture
 {
     public function load(ObjectManager $manager)
 {
     $faker = Faker\Factory::create();
-    $categories = $manager->getRepository(Category::class)->findAll();
+    $categories = $manager->getRepository(Categorie::class)->findAll();
 
     for ($i = 1; $i <= 10; $i++)
     {
