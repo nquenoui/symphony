@@ -1,0 +1,10 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{article.title}} {% endblock %}
+
+{% block body %}
+    <h2> {{article.title}} </h2>
+    <p> {{article.content}} </p>
+    <p> Crée le {{ article.createdAt |date('d-m-Y')}}  par {{article.author}}</p>
+    <a href=".">Retour</a>
+{% endblock %}

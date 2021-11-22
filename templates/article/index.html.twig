@@ -11,6 +11,36 @@
 <div class="example-wrapper">
     <h1>Hello {{ controller_name }}! ✅</h1>
 
+    <table class="user">
+            <thead>
+                <tr>
+                    <th>Titre</th>
+                    <th>Auteur</th>
+                    <th>Content</th>
+                    <th>Crée le</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for article in articles %}
+                <tr class="card-user">
+                    <td><a href="./article/{{ article.id}}">{{ article.title}}</a></td>
+                    <td>{{ article.author}}</td>
+                    <td>
+                    {% if article.content | length > 300 %}
+                        {{article.content | slice(0, 300) }}
+                        <a href="./article/{{ article.id}}">... voir plus</a>
+                    {% else %}
+                        {{article.content}}
+                    {% endif %}
+                    </td>
+                    <td>{{ article.createdAt |date('d-m-Y')}}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+    </table>
+
+    {{ knp_pagination_render(articles) }}
+
     This friendly message is coming from:
     <ul>
         <li>Your controller at <code><a href="{{ '/app/src/Controller/ArticleController.php'|file_link(0) }}">src/Controller/ArticleController.php</a></code></li>

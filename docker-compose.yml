@@ -21,7 +21,7 @@ services:
     restart: "no" # unless-stopped
     volumes:
       - data_mysql:/var/lib/mysql
-    env_file:
+    env_file:é
       - .env
     environment:
       - MYSQL_DATABASE=${MYSQL_DATABASE}

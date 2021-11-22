@@ -14,7 +14,7 @@ class ArticleFixtures extends Fixture
     {
         $faker = Factory::create();
 
-        for ($i = 1; $i <= 10; $i++)
+        for ($i = 1; $i <= 100; $i++)
         {
             $article = new Article();
 
