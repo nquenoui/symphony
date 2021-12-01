@@ -18,6 +18,7 @@
                     <th>Auteur</th>
                     <th>Content</th>
                     <th>Crée le</th>
+                    <th>Edition</th>
                 </tr>
             </thead>
             <tbody>
@@ -34,6 +35,7 @@
                     {% endif %}
                     </td>
                     <td>{{ article.createdAt |date('d-m-Y')}}</td>
+                    <td><a href="./article/{{ article.id}}/edit">Editer</a></td>
                 </tr>
             {% endfor %}
             </tbody>

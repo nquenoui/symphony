@@ -5,6 +5,8 @@ use App\Entity\Article;
 use App\Entity\Categorie;
 use App\Form\ArticleType;
 use App\Repository\ArticleRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -33,7 +35,7 @@ class ArticleController extends AbstractController
     /**
      * @Route("/article/new", methods={"GET","POST"}, name="article.new")
      */
-    public function create(Request $request): Response{
+    public function create(Request $request,ManagerRegistry $doctrine): Response{
         
         $article = new Article();
 
@@ -45,6 +47,13 @@ class ArticleController extends AbstractController
         if ($articleForm->isSubmitted() && $articleForm->isValid())
         {
             $article->setCreatedAt(new \DateTime);
+            $entityManager = $doctrine->getManager();
+             // tell Doctrine you want to (eventually) save the Product (no queries yet)
+             $entityManager->persist($article);
+
+             // actually executes the queries (i.e. the INSERT query)
+             $entityManager->flush();
+            
             return $this->redirectToRoute('article.show', [
                 'id' => $article->getId()
             ]);
@@ -53,10 +62,36 @@ class ArticleController extends AbstractController
         return $this->render('article/create.html.twig', [
             'articleForm' => $articleForm->createView() 
         ]);
+    }
 
+    /**
+     * @Route("/article/{id}/edit", methods={"GET","POST"}, name="article.edit")
+     */
+    public function update(int $id,ArticleRepository $articleRepository,Request $request,ManagerRegistry $doctrine): Response{
         
+        $article = $articleRepository->find($id);
 
-        
+        $articleForm = $this->createForm(ArticleType::class, $article);
+
+
+        $articleForm->handleRequest($request);
+
+        if ($articleForm->isSubmitted() && $articleForm->isValid())
+        {
+            $entityManager = $doctrine->getManager();
+             // tell Doctrine you want to (eventually) save the Product (no queries yet)
+            $entityManager->persist($article);
+
+            // actually executes the queries (i.e. the INSERT query)
+            $entityManager->flush();
+            return $this->redirectToRoute('article.show', [
+                'id' => $article->getId()
+            ]);
+        }
+
+        return $this->render('article/update.html.twig', [
+            'articleForm' => $articleForm->createView() 
+        ]);
     }
 
     /**
