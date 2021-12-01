@@ -1,0 +1,21 @@
+{{ form_start(articleForm) }}
+        <div class="form-group">
+            <label for="article_title">Titre de l'article</label>
+            {{ form_widget(articleForm.title) }}
+            <small class="text-danger">
+                {{ form_errors(articleForm.title) }}
+            </small>
+        </div>
+
+        {{ form_row(articleForm.content) }}
+
+        {{ form_row(articleForm.author) }}
+
+        {{ form_row(articleForm.category) }}
+
+        <button type="submit" class="btn btn-primary btn-block">
+            Créer l'article
+        </button>
+{{ form_end(articleForm) }}
+
+<a href=".">Annuler</a>

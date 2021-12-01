@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 use App\Entity\Article;
+use App\Entity\Categorie;
+use App\Form\ArticleType;
 use App\Repository\ArticleRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -29,6 +31,35 @@ class ArticleController extends AbstractController
     }
 
     /**
+     * @Route("/article/new", methods={"GET","POST"}, name="article.new")
+     */
+    public function create(Request $request): Response{
+        
+        $article = new Article();
+
+        $articleForm = $this->createForm(ArticleType::class, $article);
+
+
+        $articleForm->handleRequest($request);
+
+        if ($articleForm->isSubmitted() && $articleForm->isValid())
+        {
+            $article->setCreatedAt(new \DateTime);
+            return $this->redirectToRoute('article.show', [
+                'id' => $article->getId()
+            ]);
+        }
+
+        return $this->render('article/create.html.twig', [
+            'articleForm' => $articleForm->createView() 
+        ]);
+
+        
+
+        
+    }
+
+    /**
      * @Route("/article/{id}", methods={"GET"}, name="article.show")
      */
     public function show(int $id,ArticleRepository $articleRepository): Response{
@@ -41,5 +72,9 @@ class ArticleController extends AbstractController
             'controller_name' => 'ArticleController',
             'article' => $article
         ]);
+
+        
     }
+
+    
 }

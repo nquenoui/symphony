@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des catégories{% endblock %}
+
+{% block body %}
+<style>
+    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+</style>
+
+<div class="example-wrapper">
+    <h1>Hello {{ controller_name }}! ✅</h1>
+
+    <table class="user">
+            <thead>
+                <tr>
+                    <th>Nom</th>
+                    <th>Description</th>
+                    <th>Nombre d'articles</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for categorie in categories %}
+                <tr class="card-user">
+                    <td><a href="./categorie/{{ categorie.id}}">{{categorie.name}}</a></td>
+                    <td>
+                    {% if categorie.description | length > 300 %}
+                        {{categorie.description | slice(0, 300) }}
+                        <a href="./categorie/{{ categorie.id}}">... voir plus</a>
+                    {% else %}
+                        {{categorie.description}}
+                    {% endif %}
+                    </td>
+                    <td>0p</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+    </table>
+
+    {{ knp_pagination_render(categories) }}
+</div>
+{% endblock %}
