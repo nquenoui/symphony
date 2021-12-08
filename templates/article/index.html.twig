@@ -19,6 +19,7 @@
                     <th>Content</th>
                     <th>Crée le</th>
                     <th>Edition</th>
+                    <th>Suppression</th>
                 </tr>
             </thead>
             <tbody>
@@ -36,6 +37,14 @@
                     </td>
                     <td>{{ article.createdAt |date('d-m-Y')}}</td>
                     <td><a href="./article/{{ article.id}}/edit">Editer</a></td>
+                    <td>
+                        <form action="{{ path('article.delete', {'id': article.id}) }}" onsubmit="return confirm('Etes-vous sûr de supprimer cet article ?')" method="post">
+                            <input type="hidden" name="_method" value="DELETE">
+                            <input type="hidden" name="token" value="{{ csrf_token('delete-item') }}">
+                            <button type="submit" class="btn btn-primary btn-block">Supprimer l'article</button>
+                            
+                        </form>
+                    </td>
                 </tr>
             {% endfor %}
             </tbody>

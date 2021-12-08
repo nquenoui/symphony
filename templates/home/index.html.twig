@@ -1,0 +1,67 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello HomeController!{% endblock %}
+
+{% block body %}
+<h1>Les articles les plus récents</h1>
+    <table class="user">
+            <thead>
+                <tr>
+                    <th>Titre</th>
+                    <th>Auteur</th>
+                    <th>Content</th>
+                    <th>Crée le</th>
+                    <th>Like</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for article in mostRecentArticles %}
+                <tr class="card-user">
+                    <td><a href="./article/{{ article.id}}">{{ article.title}}</a></td>
+                    <td>{{ article.author}}</td>
+                    <td>
+                    {% if article.content | length > 300 %}
+                        {{article.content | slice(0, 300) }}
+                        <a href="./article/{{ article.id}}">... voir plus</a>
+                    {% else %}
+                        {{article.content}}
+                    {% endif %}
+                    </td>
+                    <td>{{ article.createdAt |date('d-m-Y')}}</td>
+                    <td>{{ article.likes }}</td>
+                    
+                </tr>
+            {% endfor %}
+            </tbody>
+    </table>
+    <h1>Les articles les plus likes</h1>
+    <table class="user">
+            <thead>
+                <tr>
+                    <th>Titre</th>
+                    <th>Auteur</th>
+                    <th>Content</th>
+                    <th>Crée le</th>
+                    <th>Likes</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for article in mostLikedArticles %}
+                <tr class="card-user">
+                    <td><a href="./article/{{ article.id}}">{{ article.title}}</a></td>
+                    <td>{{ article.author}}</td>
+                    <td>
+                    {% if article.content | length > 300 %}
+                        {{article.content | slice(0, 300) }}
+                        <a href="./article/{{ article.id}}">... voir plus</a>
+                    {% else %}
+                        {{article.content}}
+                    {% endif %}
+                    </td>
+                    <td>{{ article.createdAt |date('d-m-Y')}}</td>
+                    <td>{{ article.likes }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+    </table>
+{% endblock %}

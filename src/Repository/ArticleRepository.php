@@ -19,6 +19,25 @@ class ArticleRepository extends ServiceEntityRepository
         parent::__construct($registry, Article::class);
     }
 
+    public function findMostRecent($value)
+    {
+        return $this->createQueryBuilder('a')
+            ->orderBy('a.createdAt', 'DESC')
+            ->setMaxResults($value)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+    public function findMostLiked($value)
+    {
+        return $this->createQueryBuilder('a')
+            ->orderBy('a.likes', 'DESC')
+            ->setMaxResults($value)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
     // /**
     //  * @return Article[] Returns an array of Article objects
     //  */

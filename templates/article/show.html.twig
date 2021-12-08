@@ -1,10 +1,50 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{article.title}} {% endblock %}
+{% block title %}{{ article.title }}{% endblock %}
+{% block javascripts %} 
+    <script>
+    const id = document.querySelector("h1").getAttribute("data-id");
+    const likes = document.querySelector("#likes");
+    const increment = document.querySelector("#increment");
+    const decrement = document.querySelector("#decrement");
+    const urlIn = `/article/${id}/like`;
 
+    increment.addEventListener("click", () => {
+        increment.disabled = true;
+
+        fetch(urlIn)
+            .then(res => res.json())
+            .then(res => {
+                likes.textContent = res.likes;
+                increment.disabled = false;
+            });
+    });
+
+    const urlDe = `/article/${id}/unlike`;
+    decrement.addEventListener("click", () => {
+        decrement.disabled = true;
+
+        fetch(urlDe)
+            .then(res => res.json())
+            .then(res => {
+                likes.textContent = res.likes;
+                decrement.disabled = false;
+            });
+    });
+    </script>
+{% endblock %}
 {% block body %}
+    <h1 data-id="{{ article.id }}">{{ article.title }}</h1>
     <h2> {{article.title}} </h2>
     <p> {{article.content}} </p>
+    <div class="mt-3">
+        <button id="decrement" class="btn btn-outline-dark btn-lg">👎</button>
+        <strong class="p-5">
+            <span id="likes">{{ article.likes }}</span>
+            {{ article.likes <= 1  ? 'like' : 'likes' }}
+        </strong>
+        <button id="increment" class="btn btn-outline-dark btn-lg">👍</button>
+    </div>
     <p> Crée le {{ article.createdAt |date('d-m-Y')}}  par {{article.author}}</p>
     <a href=".">Retour</a>
 {% endblock %}

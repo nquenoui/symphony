@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Component\Security\Core\Exception\InvalidCsrfTokenException;
 
 class ArticleController extends AbstractController
 {
@@ -92,6 +93,71 @@ class ArticleController extends AbstractController
         return $this->render('article/update.html.twig', [
             'articleForm' => $articleForm->createView() 
         ]);
+    }
+
+    /**
+     * @Route("/article/{id}/delete", name="article.delete")
+     */
+    public function delete(int $id,ArticleRepository $articleRepository,Request $request,ManagerRegistry $doctrine): Response{
+        
+        $article = $articleRepository->find($id);
+
+        if(!$article)
+        {
+            throw $this->createNotFoundException('No ID found');
+        }
+
+        $csrfToken = $request->request->get('token');
+
+        if ($this->isCsrfTokenValid('delete-item', $csrfToken))
+        {
+            $entityManager = $doctrine->getManager();
+            // tell Doctrine you want to (eventually) save the Product (no queries yet)
+            $entityManager->remove($article);
+
+            // actually executes the queries (i.e. the INSERT query)
+            $entityManager->flush();
+
+            $this->addFlash('success', "L'article {$article->getTitle()} a bien été supprimé !");
+        } else {
+            throw new InvalidCsrfTokenException();
+        }
+        
+        return $this->redirectToRoute('article');
+    }
+
+    /**
+     * @Route("/article/{id}/unlike", name="article.unlike")
+     */
+    public function unlike(int $id,ArticleRepository $articleRepository,Request $request,ManagerRegistry $doctrine): Response{
+        $article = $articleRepository->find($id);
+        if (!$article)
+        {
+            return $this->json('The article does not exist', 404);
+        }
+        $entityManager = $doctrine->getManager();
+        $article->decrementLikes();
+        // actually executes the queries (i.e. the INSERT query)
+        $entityManager->persist($article);
+        $entityManager->flush();
+        return $this->json(['likes' => $article->getLikes()], 200);
+    }
+
+    /**
+     * @Route("/article/{id}/like", name="article.like")
+     */
+    public function like(int $id,ArticleRepository $articleRepository,Request $request,ManagerRegistry $doctrine): Response{
+        $article = $articleRepository->find($id);
+        if (!$article)
+        {
+            return $this->json('The article does not exist', 404);
+        }
+        $entityManager = $doctrine->getManager();
+        $article->incrementLikes();
+        // actually executes the queries (i.e. the INSERT query)
+        $entityManager->persist($article);
+        $entityManager->flush();
+        return $this->json(['likes' => $article->getLikes()], 200);
     }
 
     /**
